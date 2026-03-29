@@ -1,4 +1,8 @@
 const links = {
+  home: "https://borsiimre60.github.io/",
+  kozoskepviselok: "https://borsiimre60.github.io/kozoskepviselok/",
+  vendeglatohelyek: "https://borsiimre60.github.io/vendeglatohelyek/",
+  szakemberek: "https://borsiimre60.github.io/szakemberek/",
   szakipush: "https://borsiimre60.github.io/szakipush-web/"
 };
 
