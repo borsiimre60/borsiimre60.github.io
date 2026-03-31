@@ -64,9 +64,38 @@ a {
 }
 
 .brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
   font-weight: 800;
   text-decoration: none;
   letter-spacing: -0.02em;
+}
+
+.brand-logo {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.brand-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.brand-name {
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.brand-subtitle {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.25;
 }
 
 .header-nav {
@@ -451,6 +480,11 @@ a {
     align-items: flex-start;
   }
 
+  .brand-logo {
+    width: 50px;
+    height: 50px;
+  }
+
   .header-nav {
     flex-wrap: wrap;
     gap: 14px;
@@ -472,6 +506,22 @@ a {
 
   .hero-actions {
     flex-direction: column;
+  }
+
+  .brand {
+    gap: 12px;
+  }
+
+  .brand-copy {
+    gap: 3px;
+  }
+
+  .brand-name {
+    font-size: 0.96rem;
+  }
+
+  .brand-subtitle {
+    font-size: 0.74rem;
   }
 
   .button {
