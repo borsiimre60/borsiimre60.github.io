@@ -389,6 +389,19 @@ a {
   margin-top: 22px;
 }
 
+.cta-panel-strong {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.cta-panel-strong .button-row {
+  flex-direction: column;
+}
+
+.cta-panel-strong .button {
+  width: 100%;
+}
+
 .button-ghost {
   color: var(--primary-dark);
   background: rgba(31, 94, 255, 0.08);
@@ -399,6 +412,14 @@ a {
   margin-top: 14px;
   color: var(--muted);
   font-size: 0.95rem;
+}
+
+.compact-list {
+  margin-top: 18px;
+}
+
+.compact-list li + li {
+  margin-top: 6px;
 }
 
 .site-footer {
