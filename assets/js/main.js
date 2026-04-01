@@ -147,6 +147,23 @@ function bindTrackedCtas() {
 
 bindTrackedCtas();
 
+function trackLandingView() {
+  const pageRoot = document.body;
+  if (!pageRoot || pageRoot.dataset.brevoViewTracked === "true") {
+    return;
+  }
+
+  pageRoot.dataset.brevoViewTracked = "true";
+  trackBrevoEvent("landing_view", {
+    eventData: compactObject({
+      page_url: window.location.href,
+      page_path: window.location.pathname
+    })
+  });
+}
+
+trackLandingView();
+
 const leadForm = document.getElementById("lead-form");
 const formFeedback = document.getElementById("form-feedback");
 
