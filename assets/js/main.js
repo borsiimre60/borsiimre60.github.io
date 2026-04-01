@@ -1,8 +1,9 @@
 // Google Forms config
-// Ha elkészül a dedikált "Villanyszerelő VII. kerület – hibabejelentés és munkaleadás"
-// Google űrlap, ezt az egyetlen konstans URL-t kell lecserélni az új viewform linkre.
+// A dedikált "Villanyszerelő VII. kerület – hibabejelentés és munkaleadás"
+// Google űrlap respondent URL-je. Ha később új form készül, ezt az egyetlen
+// konstans URL-t kell lecserélni az új viewform linkre.
 const ELECTRICIAN_VII_GOOGLE_FORM_URL =
-  "https://docs.google.com/forms/d/e/1FAIpQLSfbSlrvX8jRNn0K3WF7z-yO2KEKpI40qX7tWSVVk0XNBhhh7A/viewform?usp=pp_url&entry.716565563=villanyszerelo_vii_landing";
+  "https://docs.google.com/forms/d/e/1FAIpQLScgFKq-AejXcknwKhhu7Jrv0mvZN8TtFd9FJ0m2mZHxmvoKFQ/viewform?usp=publish-editor";
 
 const links = {
   home: "/",
