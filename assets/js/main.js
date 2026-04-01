@@ -7,7 +7,9 @@ const links = {
   szakemberek: "/szakemberek/",
   szakipush: "/szakipush-web/",
   villanyszereloVii: "/villanyszerelo-vii/",
-  // Ide később egy dedikált villanyszerelő Google űrlap URL tehető be egy sor cserével.
+  // Ideiglenes Google Form URL.
+  // Ha elkészül a dedikált "Villanyszerelő VII. kerület – hibabejelentés és munkaleadás"
+  // Google űrlap, ezt az egy sort kell lecserélni az új viewform URL-re.
   villanyszereloForm:
     "https://docs.google.com/forms/d/e/1FAIpQLSfbSlrvX8jRNn0K3WF7z-yO2KEKpI40qX7tWSVVk0XNBhhh7A/viewform?usp=pp_url&entry.716565563=villanyszerelo_vii_landing"
 };
