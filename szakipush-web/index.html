@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SzakiPush – Webes push engedélyező oldal</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+  <style>
+    :root {
+      --violet: #431385;
+      --bg: #f6f3ff;
+      --card: #fff;
+      --ink: #391d66;
+      --soft: #ece7fc;
+      --ok: #12a150;
+      --warn: #e6a700;
+      --err: #c62828;
+      --muted: #6a5b8d;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      font-family: "Montserrat", Arial, sans-serif;
+    }
+
+    .container {
+      max-width: 480px;
+      margin: 54px auto;
+      padding: 32px 28px 28px;
+      background: var(--card);
+      border-radius: 24px;
+      box-shadow: 0 8px 36px #4f24af14;
+      text-align: center;
+      position: relative;
+      animation: fadein 0.7s;
+    }
+
+    @keyframes fadein {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    h1 {
+      margin-bottom: 18px;
+      color: var(--violet);
+      font-size: 2.1rem;
+      font-weight: 700;
+      letter-spacing: -1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 13px;
+    }
+
+    .emoji {
+      font-size: 2.1rem;
+      margin-right: 6px;
+    }
+
+    .info-box {
+      margin-bottom: 16px;
+      padding: 14px 16px;
+      background: var(--soft);
+      color: var(--ink);
+      border-radius: 14px;
+      border-left: 5px solid #a87cff;
+      font-size: 1.07rem;
+      font-weight: 500;
+      line-height: 1.44;
+      text-align: center;
+    }
+
+    .info-box b {
+      color: #7b38d8;
+    }
+
+    .main-btn,
+    .next-btn,
+    .test-btn {
+      margin-top: 18px;
+      padding: 13px 23px;
+      border: none;
+      border-radius: 12px;
+      color: #fff;
+      font-size: 1.08rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 2px 12px #9c59ef25;
+      transition: transform 0.14s, box-shadow 0.14s, opacity 0.14s;
+    }
+
+    .main-btn {
+      background: linear-gradient(90deg, #8726e7, #365cd8 70%);
+    }
+
+    .next-btn {
+      display: none;
+      border-radius: 9px;
+      background: linear-gradient(90deg, #4cafff, #807fff 80%);
+    }
+
+    .test-btn {
+      background: linear-gradient(90deg, #00b26a, #2bce8f 80%);
+    }
+
+    .main-btn:active,
+    .next-btn:active,
+    .test-btn:active {
+      transform: scale(0.97);
+    }
+
+    .thanks {
+      margin-top: 24px;
+      padding: 10px 16px;
+      background: #e0ffed;
+      color: var(--ink);
+      border-radius: 10px;
+      font-size: 1.13rem;
+      font-weight: 600;
+      display: none;
+      animation: fadein 0.7s;
+    }
+
+    .notice {
+      margin-top: 18px;
+      color: #443b5e;
+      font-size: 0.98rem;
+      font-weight: 500;
+      line-height: 1.6;
+    }
+
+    .diag {
+      max-width: 820px;
+      margin: 24px auto 54px;
+      padding: 18px;
+      background: #ffffff;
+      border: 1px solid #e9e4ff;
+      border-radius: 20px;
+      box-shadow: 0 8px 30px #00000012;
+    }
+
+    .diag h2 {
+      margin: 0 0 10px;
+      color: #2a2260;
+      font-size: 1.15rem;
+      text-align: left;
+    }
+
+    .checks {
+      color: #2a225c;
+      font-size: 0.95rem;
+      text-align: left;
+    }
+
+    .check {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 9px 10px;
+      border-bottom: 1px dashed #eee;
+    }
+
+    .check small {
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .badge {
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 800;
+    }
+
+    .ok {
+      background: #e8f7ef;
+      color: var(--ok);
+    }
+
+    .warn {
+      background: #fff6dd;
+      color: var(--warn);
+    }
+
+    .err {
+      background: #ffe8e8;
+      color: var(--err);
+    }
+
+    .log {
+      margin-top: 12px;
+      padding: 12px;
+      background: #0f1020;
+      color: #e8e8ff;
+      border-radius: 12px;
+      box-shadow: inset 0 0 0 1px #2a2a55;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.86rem;
+      line-height: 1.4;
+      max-height: 220px;
+      overflow: auto;
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .muted {
+      margin-top: 8px;
+      color: #7e73a6;
+      font-size: 0.9rem;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1><span class="emoji">🔔</span> SzakiPush – Webes push engedélyező oldal</h1>
+
+    <div class="info-box">
+      <b>Kattints az engedélyezéshez a böngésző felugró ablakában!</b><br><br>
+      <b>Figyelem:</b> A munkát ezután <b>push értesítésben</b> fogod kapni.<br>
+      Ha engedélyezed a push üzeneteket, a következő lépésben a regisztrációs űrlap automatikusan megnyílik!
+    </div>
+
+    <div class="notice">
+      A regisztrációhoz először engedélyezd a push üzeneteket,<br>
+      majd töltsd ki a megnyíló Google űrlapot!
+    </div>
+
+    <div class="row">
+      <button class="main-btn" id="pushBtn">
+        <span class="icon">✅</span> Engedélyezem és regisztrálok
+      </button>
+      <button class="test-btn" id="selfTestBtn">
+        🧪 Önellenőrzés (nem kér engedélyt)
+      </button>
+    </div>
+
+    <div class="thanks" id="doneMsg">
+      Köszönjük, az értesítés engedélyezve!<br>
+      <span style="font-weight: 400;">Tovább a regisztrációhoz:</span>
+    </div>
+    <button class="next-btn" id="nextBtn">
+      <span class="icon">📝</span> Google űrlap kitöltése
+    </button>
+  </div>
+
+  <div class="diag" id="diagPanel">
+    <h2>🧭 Teszt mód / Önellenőrzés</h2>
+    <div class="checks" id="checks"></div>
+    <div class="log" id="log"></div>
+    <div class="muted">Tipp: ha a böngésző blokkolja a felugrókat, az űrlap-link megnyitása hibát jelezhet.</div>
+  </div>
+
+  <script>
+    const APP_ID = "os_v2_org_zwupsdpxofapbkx5qoxo62qtpa5fs3up5lrutln3dklvjivka7ylppvebxqzwiklcryg3et4daxqpm7ctjx5uoe7sfy7mbaxjcuab5y";
+    const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfwmK4o09-j7fxWj_gqVe7tf1Z1grngHYUfsA0N2FECY5oljA/viewform";
+
+    const $ = (selector) => document.querySelector(selector);
+    const logEl = $("#log");
+    const checksEl = $("#checks");
+
+    function log(message, data) {
+      const time = new Date().toISOString().split("T")[1].replace("Z", "");
+      if (data !== undefined) {
+        logEl.textContent += `[${time}] ${message}: ${safeStringify(data)}\n`;
+      } else {
+        logEl.textContent += `[${time}] ${message}\n`;
+      }
+      logEl.scrollTop = logEl.scrollHeight;
+      console.debug(message, data ?? "");
+    }
+
+    function safeStringify(value) {
+      try {
+        return typeof value === "string" ? value : JSON.stringify(value);
+      } catch (error) {
+        return String(value);
+      }
+    }
+
+    function setCheck(id, label, status, detail) {
+      let row = document.getElementById(id);
+      if (!row) {
+        row = document.createElement("div");
+        row.className = "check";
+        row.id = id;
+        row.innerHTML = `<div><b>${label}</b><br><small></small></div><span class="badge"></span>`;
+        checksEl.appendChild(row);
+      }
+
+      const badge = row.querySelector(".badge");
+      const small = row.querySelector("small");
+      small.textContent = detail || "";
+      badge.className = "badge " + (status === "ok" ? "ok" : status === "warn" ? "warn" : "err");
+      badge.textContent = status === "ok" ? "✔ OK" : status === "warn" ? "⚠ Figyelem" : "❌ Hiba";
+    }
+
+    function supportsNotifications() {
+      return "Notification" in window;
+    }
+
+    function isSecureContextPage() {
+      return location.protocol === "https:" || location.hostname === "localhost";
+    }
+
+    function popupTest() {
+      let popup = null;
+      try {
+        popup = window.open("about:blank", "_blank");
+      } catch (error) {
+        return false;
+      }
+
+      if (popup && !popup.closed) {
+        popup.close();
+        return true;
+      }
+
+      return false;
+    }
+
+    async function baselineDiagnostics() {
+      setCheck("chk_env", "Oldal környezet", "ok", `${location.protocol}//${location.host}${location.pathname}`);
+      if (!isSecureContextPage()) {
+        setCheck("chk_env", "Oldal környezet", "warn", "Nem https / nem localhost – push problémás lehet.");
+      }
+
+      const notif = supportsNotifications();
+      setCheck("chk_notif_api", "Értesítési API támogatás", notif ? "ok" : "err", notif ? "Elérhető" : "Nem támogatott a böngészőben");
+
+      const serviceWorkerSupport = "serviceWorker" in navigator;
+      setCheck("chk_sw", "Service Worker támogatás", serviceWorkerSupport ? "ok" : "err", serviceWorkerSupport ? "Elérhető" : "Hiányzik");
+
+      const permission = (window.Notification && Notification.permission) || "ismeretlen";
+      setCheck(
+        "chk_perm",
+        "Jelenlegi értesítési jogosultság",
+        permission === "granted" ? "ok" : permission === "default" ? "warn" : "err",
+        permission
+      );
+
+      const canPopup = popupTest();
+      setCheck("chk_popup", "Felugró ablak nyitható", canPopup ? "ok" : "warn", canPopup ? "Engedélyezettnek tűnik" : "Lehet, hogy blokkolva van");
+
+      const sdkLoaded = !!window.OneSignalDeferred || !!window.OneSignal;
+      setCheck("chk_sdk", "OneSignal SDK betöltve", sdkLoaded ? "ok" : "err", sdkLoaded ? "Igen" : "Nem");
+      log("Baseline kész", { permission, serviceWorkerSupport, canPopup, sdkLoaded });
+    }
+
+    async function enablePushAndOpenForm() {
+      document.getElementById("pushBtn").disabled = true;
+
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      OneSignalDeferred.push(async function (OneSignal) {
+        try {
+          log("OneSignal.init indul");
+          setCheck("chk_init", "OneSignal inicializálás", "warn", "Folyamatban...");
+          await OneSignal.init({ appId: APP_ID });
+          setCheck("chk_init", "OneSignal inicializálás", "ok", "Sikeres");
+          log("OneSignal.init kész");
+
+          if (Notification.permission === "granted") {
+            setCheck("chk_perm", "Jelenlegi értesítési jogosultság", "ok", "granted (korábban engedélyezve)");
+          }
+
+          if (Notification.permission !== "granted") {
+            setCheck("chk_prompt", "Engedélykérés (slidedown)", "warn", "Megjelenítés kérése…");
+            log("showSlidedownPrompt hívás");
+            await OneSignal.showSlidedownPrompt();
+            setCheck(
+              "chk_prompt",
+              "Engedélykérés (slidedown)",
+              Notification.permission === "granted" ? "ok" : Notification.permission === "default" ? "warn" : "err",
+              `Permission: ${Notification.permission}`
+            );
+            log("showSlidedownPrompt visszatért", Notification.permission);
+          } else {
+            setCheck("chk_prompt", "Engedélykérés (slidedown)", "ok", "Már engedélyezve – nem szükséges");
+          }
+
+          const isEnabled = await OneSignal.Notifications.isPushEnabled();
+          setCheck("chk_enabled", "Push engedélyezve", isEnabled ? "ok" : "err", String(isEnabled));
+          log("isPushEnabled", isEnabled);
+
+          let playerId = null;
+          try {
+            playerId = await OneSignal.User.getId();
+            setCheck("chk_player", "OneSignal Player ID", playerId ? "ok" : "warn", playerId || "Nincs még");
+            log("PlayerID", playerId);
+          } catch (error) {
+            setCheck("chk_player", "OneSignal Player ID", "err", "Hiba a lekéréskor");
+            log("PlayerID hiba", error);
+          }
+
+          if (isEnabled) {
+            document.getElementById("doneMsg").style.display = "block";
+            document.getElementById("nextBtn").style.display = "inline-flex";
+            document.getElementById("pushBtn").classList.add("hidden");
+            setCheck("chk_ui", "UI frissítés", "ok", "Köszönő üzenet és Tovább gomb látható");
+          } else {
+            setCheck("chk_ui", "UI frissítés", "warn", "Nincs engedély – marad az Engedélyezem gomb");
+            alert("Az értesítést nem engedélyezted – frissítsd az oldalt, ha újra próbálod.");
+          }
+
+          if (isEnabled) {
+            const popup = window.open(FORM_URL, "_blank");
+            if (!popup) {
+              setCheck("chk_form", "Űrlapmegnyitás", "warn", "A böngésző blokkolta a felugró ablakot");
+              log("Űrlap megnyitása: popup blokkolva lehet");
+            } else {
+              setCheck("chk_form", "Űrlapmegnyitás", "ok", "Megnyitva új fülön");
+              log("Űrlap megnyitva");
+            }
+          } else {
+            setCheck("chk_form", "Űrlapmegnyitás", "warn", "Nem engedélyezett push – nem nyitjuk automatikusan");
+          }
+        } catch (error) {
+          setCheck("chk_init", "OneSignal inicializálás", "err", "Hiba történt");
+          log("OneSignal.init/futtatás hiba", error);
+          alert("Hiba történt az engedélyezés közben. Részletek a naplóban.");
+        } finally {
+          document.getElementById("pushBtn").disabled = false;
+        }
+      });
+    }
+
+    function goToForm() {
+      const popup = window.open(FORM_URL, "_blank");
+      if (!popup) {
+        setCheck("chk_form", "Űrlapmegnyitás", "warn", "A böngésző blokkolta a felugró ablakot");
+        log("Kézi űrlap megnyitás: popup blokkolva lehet");
+      } else {
+        setCheck("chk_form", "Űrlapmegnyitás", "ok", "Megnyitva új fülön");
+        log("Kézi űrlap megnyitva");
+      }
+    }
+
+    async function runSelfTest() {
+      log("Önellenőrzés indult…");
+      await baselineDiagnostics();
+
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      let sdkReady = false;
+      try {
+        OneSignalDeferred.push(async () => {
+          sdkReady = true;
+          setCheck("chk_sdk_ready", "OneSignal objektum elérhető", "ok", "Callback fut");
+          log("OneSignal callback fut");
+        });
+        await new Promise((resolve) => setTimeout(resolve, 400));
+        if (!sdkReady) {
+          setCheck("chk_sdk_ready", "OneSignal objektum elérhető", "warn", "Lehet, hogy még töltődik…");
+        }
+      } catch (error) {
+        setCheck("chk_sdk_ready", "OneSignal objektum elérhető", "err", "Hiba történt");
+        log("SDK ready ellenőrzés hiba", error);
+      }
+
+      log("Önellenőrzés befejezve.");
+    }
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      await baselineDiagnostics();
+
+      document.getElementById("pushBtn").addEventListener("click", enablePushAndOpenForm);
+      document.getElementById("nextBtn").addEventListener("click", goToForm);
+      document.getElementById("selfTestBtn").addEventListener("click", runSelfTest);
+
+      if (typeof Notification !== "undefined" && Notification.permission === "granted") {
+        log("Permission már granted induláskor");
+        setCheck("chk_perm", "Jelenlegi értesítési jogosultság", "ok", "granted (induláskor)");
+      }
+    });
+  </script>
+</body>
+</html>
