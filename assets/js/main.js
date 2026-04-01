@@ -1,3 +1,9 @@
+// Google Forms config
+// Ha elkészül a dedikált "Villanyszerelő VII. kerület – hibabejelentés és munkaleadás"
+// Google űrlap, ezt az egyetlen konstans URL-t kell lecserélni az új viewform linkre.
+const ELECTRICIAN_VII_GOOGLE_FORM_URL =
+  "https://docs.google.com/forms/d/e/1FAIpQLSfbSlrvX8jRNn0K3WF7z-yO2KEKpI40qX7tWSVVk0XNBhhh7A/viewform?usp=pp_url&entry.716565563=villanyszerelo_vii_landing";
+
 const links = {
   home: "/",
   kozoskepviselok: "/kozoskepviselok/",
@@ -7,11 +13,7 @@ const links = {
   szakemberek: "/szakemberek/",
   szakipush: "/szakipush-web/",
   villanyszereloVii: "/villanyszerelo-vii/",
-  // Ideiglenes Google Form URL.
-  // Ha elkészül a dedikált "Villanyszerelő VII. kerület – hibabejelentés és munkaleadás"
-  // Google űrlap, ezt az egy sort kell lecserélni az új viewform URL-re.
-  villanyszereloForm:
-    "https://docs.google.com/forms/d/e/1FAIpQLSfbSlrvX8jRNn0K3WF7z-yO2KEKpI40qX7tWSVVk0XNBhhh7A/viewform?usp=pp_url&entry.716565563=villanyszerelo_vii_landing"
+  villanyszereloForm: ELECTRICIAN_VII_GOOGLE_FORM_URL
 };
 
 document.querySelectorAll("[data-link]").forEach((element) => {
@@ -44,9 +46,20 @@ function compactObject(source) {
   );
 }
 
+function readTrackingContext(overrides = {}) {
+  return compactObject({
+    page: overrides.page || BREVO_TRACKER_CONFIG.page,
+    section: overrides.section,
+    target_type: overrides.targetType,
+    source_label: overrides.sourceLabel || BREVO_TRACKER_CONFIG.sourceLabel,
+    ...overrides.eventData
+  });
+}
+
 // Brevo tracker config
 // Fontos: ide csak a Brevo nyilvános tracker client_key kerülhet.
 // REST API kulcsot vagy más titkos kulcsot ne tegyél frontendbe.
+// Ha később lesz végleges Brevo tracking, ezt a clientKey mezőt töltsd ki.
 const brevoExternalConfig = window.__BREVO_TRACKER_CONFIG__ || {};
 const BREVO_TRACKER_CONFIG = {
   clientKey: "",
@@ -115,13 +128,7 @@ function trackBrevoEvent(eventName, options = {}) {
   }
 
   const properties = compactObject(options.properties || {});
-  const eventMeta = compactObject({
-    page: options.page || BREVO_TRACKER_CONFIG.page,
-    section: options.section,
-    target_type: options.targetType,
-    source_label: options.sourceLabel || BREVO_TRACKER_CONFIG.sourceLabel,
-    ...options.eventData
-  });
+  const eventMeta = readTrackingContext(options);
 
   const command = ["track", eventName, properties];
   if (Object.keys(eventMeta).length > 0) {
@@ -132,15 +139,110 @@ function trackBrevoEvent(eventName, options = {}) {
   return true;
 }
 
+// GA4 tracking helper
+// A gtag snippet külön kerülhet az oldalba, ha később GA4 mérés is kell.
+function isGa4TrackerAvailable() {
+  return typeof window.gtag === "function";
+}
+
+function trackGa4Event(eventName, options = {}) {
+  if (!eventName || !isGa4TrackerAvailable()) {
+    return false;
+  }
+
+  window.gtag("event", eventName, compactObject({
+    ...readTrackingContext(options),
+    ...options.properties
+  }));
+
+  return true;
+}
+
+function trackMarketingEvent(eventName, options = {}) {
+  const brevoTracked = trackBrevoEvent(eventName, options);
+  const ga4Tracked = trackGa4Event(eventName, options);
+  return brevoTracked || ga4Tracked;
+}
+
+const trackingState = {
+  landingViewTracked: false,
+  leadStartTracked: false
+};
+
+function trackPhoneClick(options = {}) {
+  return trackMarketingEvent("phone_click", {
+    targetType: "phone",
+    ...options
+  });
+}
+
+function trackEmailClick(options = {}) {
+  return trackMarketingEvent("email_click", {
+    targetType: "email",
+    ...options
+  });
+}
+
+function trackGoogleFormClick(options = {}) {
+  return trackMarketingEvent("google_form_click", {
+    targetType: "google_form",
+    ...options
+  });
+}
+
+function trackLeadStart(options = {}) {
+  if (trackingState.leadStartTracked) {
+    return false;
+  }
+
+  trackingState.leadStartTracked = true;
+  return trackMarketingEvent("lead_form_start", {
+    targetType: "form",
+    ...options
+  });
+}
+
+function trackLeadSubmitAttempt(formData, options = {}) {
+  return trackMarketingEvent("lead_form_submit_attempt", {
+    targetType: "form",
+    ...options,
+    properties: compactObject({
+      has_email: hasTrackingValue(formData?.get("email")) ? "yes" : "no"
+    }),
+    eventData: compactObject({
+      property_type: formData?.get("propertyType"),
+      urgency: formData?.get("urgency"),
+      ...options.eventData
+    })
+  });
+}
+
+const trackingHandlers = {
+  phone_click: trackPhoneClick,
+  email_click: trackEmailClick,
+  google_form_click: trackGoogleFormClick,
+  lead_form_start: trackLeadStart
+};
+
+function buildTrackingOptions(element) {
+  return {
+    section: element.dataset.trackSection,
+    targetType: element.dataset.trackTargetType,
+    sourceLabel: element.dataset.trackSourceLabel
+  };
+}
+
 // CTA tracking binding
 function bindTrackedCtas() {
   document.querySelectorAll("[data-track-event]").forEach((element) => {
+    const eventName = element.dataset.trackEvent;
+    const handler = trackingHandlers[eventName];
+    if (typeof handler !== "function") {
+      return;
+    }
+
     element.addEventListener("click", () => {
-      trackBrevoEvent(element.dataset.trackEvent, {
-        section: element.dataset.trackSection,
-        targetType: element.dataset.trackTargetType,
-        sourceLabel: element.dataset.trackSourceLabel
-      });
+      handler(buildTrackingOptions(element));
     });
   });
 }
@@ -148,13 +250,12 @@ function bindTrackedCtas() {
 bindTrackedCtas();
 
 function trackLandingView() {
-  const pageRoot = document.body;
-  if (!pageRoot || pageRoot.dataset.brevoViewTracked === "true") {
+  if (trackingState.landingViewTracked) {
     return;
   }
 
-  pageRoot.dataset.brevoViewTracked = "true";
-  trackBrevoEvent("landing_view", {
+  trackingState.landingViewTracked = true;
+  trackMarketingEvent("landing_view", {
     eventData: compactObject({
       page_url: window.location.href,
       page_path: window.location.pathname
@@ -168,19 +269,11 @@ const leadForm = document.getElementById("lead-form");
 const formFeedback = document.getElementById("form-feedback");
 
 if (leadForm) {
-  let leadFormStarted = false;
-
   leadForm.addEventListener(
     "focusin",
     () => {
-      if (leadFormStarted) {
-        return;
-      }
-
-      leadFormStarted = true;
-      trackBrevoEvent("lead_form_start", {
-        section: "contact",
-        targetType: "form"
+      trackLeadStart({
+        section: "contact"
       });
     },
     { once: true }
@@ -190,16 +283,8 @@ if (leadForm) {
     event.preventDefault();
 
     const data = new FormData(leadForm);
-    trackBrevoEvent("lead_form_submit_attempt", {
-      section: "contact",
-      targetType: "form",
-      properties: compactObject({
-        email: data.get("email")
-      }),
-      eventData: compactObject({
-        property_type: data.get("propertyType"),
-        urgency: data.get("urgency")
-      })
+    trackLeadSubmitAttempt(data, {
+      section: "contact"
     });
 
     const requiredConsent = data.get("consent");

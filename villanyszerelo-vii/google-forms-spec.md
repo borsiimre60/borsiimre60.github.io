@@ -117,3 +117,11 @@ Az új `viewform` URL kerüljön ide, és automatikusan frissülni fog:
 - dedikált Google Form tényleges létrehozása ebből a környezetből nem sikerült, mert a böngészős létrehozás Google bejelentkezést kért
 - külön Google Sheet ténylegesen létrejött
 - a landing jelenleg ideiglenes Google Form URL-t használ, amíg a dedikált űrlap el nem készül
+
+## Deployment checklist
+
+- cseréld a `assets/js/main.js` fájlban az `ELECTRICIAN_VII_GOOGLE_FORM_URL` értékét a végleges Google Form `viewform` URL-re
+- add meg a `assets/js/main.js` fájlban a `BREVO_TRACKER_CONFIG.clientKey` publikus Brevo tracker azonosítót
+- ha GA4 mérés is kell, tedd be külön a Google tag (`gtag`) snippetet, a mostani helper ehhez már igazodik
+- kattintsd végig a telefon, e-mail és Google űrlap CTA-kat desktop és mobil nézetben
+- ellenőrizd publikus deploy után, hogy a `https://borsiimre60.github.io/villanyszerelo-vii/` oldal a friss `assets/js/main.js` fájlt használja
