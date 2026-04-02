@@ -15,6 +15,24 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/style.css">
+  <script>
+    // Google tag / Google Ads kézi konfiguráció ehhez a landinghez.
+    // `tagId`: ide kerül a Google tag azonosító, pl. `AW-123456789`.
+    // `phone_click` és `google_form_click`: ide kerülnek a Google Ads
+    // konverziós actionök label értékei.
+    // Ha bármelyik mező üres marad, az oldal akkor is hibamentesen működik,
+    // csak az adott Google Ads mérés marad inaktív.
+    window.__GOOGLE_TAG_CONFIG__ = window.__GOOGLE_TAG_CONFIG__ || {};
+    window.__GOOGLE_TAG_CONFIG__.tagId =
+      window.__GOOGLE_TAG_CONFIG__.tagId || "AW-947361799";
+    window.__GOOGLE_TAG_CONFIG__.adsConversions = Object.assign(
+      {
+        phone_click: "obigCPuLnpQcEIew3sMD",
+        google_form_click: "-d5GCPiLnpQcEIew3sMD"
+      },
+      window.__GOOGLE_TAG_CONFIG__.adsConversions || {}
+    );
+  </script>
   <script defer src="/assets/js/main.js"></script>
 </head>
 <body class="theme-villany" data-page="villanyszerelo-vii" data-source-label="villanyszerelo_vii_landing">
