@@ -57,6 +57,158 @@ function readTrackingContext(overrides = {}) {
   });
 }
 
+// Google tag / Google Ads config
+// `tagId`: a Google tag azonosító, pl. `AW-123456789`.
+// `adsConversions`: a konverziós actionök label-jei eseményenként.
+// Ha a tagId vagy egy label nincs megadva, a Google Ads mérés no-op marad.
+const googleTagExternalConfig = window.__GOOGLE_TAG_CONFIG__ || {};
+const GOOGLE_TAG_CONFIG = {
+  tagId: "",
+  sdkBaseUrl: "https://www.googletagmanager.com/gtag/js",
+  debug: false,
+  adsConversions: {
+    phone_click: "",
+    google_form_click: ""
+  },
+  ...googleTagExternalConfig,
+  adsConversions: {
+    phone_click: "",
+    google_form_click: "",
+    ...(googleTagExternalConfig.adsConversions || {})
+  }
+};
+
+// Opcionális GA4 config.
+// Ha később külön GA4 mérés is kell, ide vagy külső configba kerülhet a
+// measurement ID. Enélkül a GA4 helper inaktív marad akkor is, ha a Google tag
+// már be van töltve Google Adshez.
+const ga4ExternalConfig = window.__GA4_TRACKING_CONFIG__ || {};
+const GA4_TRACKING_CONFIG = {
+  measurementId: "",
+  ...ga4ExternalConfig
+};
+
+const googleTagState = {
+  gtagInitialized: false,
+  scriptRequested: false,
+  configuredIds: new Set()
+};
+
+function getNormalizedGoogleTagId(tagId) {
+  if (!hasTrackingValue(tagId)) {
+    return "";
+  }
+
+  return String(tagId).trim();
+}
+
+function hasGoogleTagDestination() {
+  return (
+    hasTrackingValue(GOOGLE_TAG_CONFIG.tagId) ||
+    hasTrackingValue(GA4_TRACKING_CONFIG.measurementId)
+  );
+}
+
+function getPrimaryGoogleTagId() {
+  return (
+    getNormalizedGoogleTagId(GOOGLE_TAG_CONFIG.tagId) ||
+    getNormalizedGoogleTagId(GA4_TRACKING_CONFIG.measurementId)
+  );
+}
+
+function queueGoogleTagConfig(tagId) {
+  const normalizedTagId = getNormalizedGoogleTagId(tagId);
+  if (!normalizedTagId || googleTagState.configuredIds.has(normalizedTagId)) {
+    return false;
+  }
+
+  window.gtag("config", normalizedTagId);
+  googleTagState.configuredIds.add(normalizedTagId);
+  return true;
+}
+
+function ensureGoogleTag() {
+  const primaryTagId = getPrimaryGoogleTagId();
+  if (!primaryTagId) {
+    return false;
+  }
+
+  window.dataLayer = window.dataLayer || [];
+
+  if (typeof window.gtag !== "function") {
+    window.gtag = function gtag() {
+      window.dataLayer.push(arguments);
+    };
+  }
+
+  if (!googleTagState.gtagInitialized) {
+    window.gtag("js", new Date());
+    googleTagState.gtagInitialized = true;
+  }
+
+  queueGoogleTagConfig(GOOGLE_TAG_CONFIG.tagId);
+  queueGoogleTagConfig(GA4_TRACKING_CONFIG.measurementId);
+
+  const existingGoogleTagSdk = document.querySelector(
+    'script[data-google-tag-sdk="true"], script[src*="googletagmanager.com/gtag/js"]'
+  );
+  if (existingGoogleTagSdk) {
+    googleTagState.scriptRequested = true;
+    return true;
+  }
+
+  if (!googleTagState.scriptRequested) {
+    const script = document.createElement("script");
+    script.src = `${GOOGLE_TAG_CONFIG.sdkBaseUrl}?id=${encodeURIComponent(
+      primaryTagId
+    )}`;
+    script.async = true;
+    script.dataset.googleTagSdk = "true";
+    script.addEventListener("error", () => {
+      if (GOOGLE_TAG_CONFIG.debug) {
+        console.warn("Google tag SDK betöltése sikertelen.");
+      }
+    });
+    document.head.appendChild(script);
+    googleTagState.scriptRequested = true;
+  }
+
+  return true;
+}
+
+function getGoogleAdsConversionSendTo(eventName) {
+  const tagId = getNormalizedGoogleTagId(GOOGLE_TAG_CONFIG.tagId);
+  const label = GOOGLE_TAG_CONFIG.adsConversions[eventName];
+
+  if (!tagId || !hasTrackingValue(label)) {
+    return "";
+  }
+
+  return `${tagId}/${String(label).trim()}`;
+}
+
+// Google Ads conversion helper
+// Nem blokkolja a linket: nincs preventDefault, és nem vár callbackre ahhoz,
+// hogy a tel: vagy a Google Forms link működjön.
+function trackGoogleAdsConversion(eventName, options = {}) {
+  const sendTo = getGoogleAdsConversionSendTo(eventName);
+  if (!eventName || !sendTo || !ensureGoogleTag()) {
+    return false;
+  }
+
+  window.gtag(
+    "event",
+    "conversion",
+    compactObject({
+      send_to: sendTo,
+      value: options.value,
+      currency: options.currency
+    })
+  );
+
+  return true;
+}
+
 // Brevo tracker config
 // Fontos: ide csak a Brevo nyilvános tracker client_key kerülhet.
 // REST API kulcsot vagy más titkos kulcsot ne tegyél frontendbe.
@@ -143,11 +295,11 @@ function trackBrevoEvent(eventName, options = {}) {
 // GA4 tracking helper
 // A gtag snippet külön kerülhet az oldalba, ha később GA4 mérés is kell.
 function isGa4TrackerAvailable() {
-  return typeof window.gtag === "function";
+  return hasTrackingValue(GA4_TRACKING_CONFIG.measurementId);
 }
 
 function trackGa4Event(eventName, options = {}) {
-  if (!eventName || !isGa4TrackerAvailable()) {
+  if (!eventName || !isGa4TrackerAvailable() || !ensureGoogleTag()) {
     return false;
   }
 
@@ -171,10 +323,13 @@ const trackingState = {
 };
 
 function trackPhoneClick(options = {}) {
-  return trackMarketingEvent("phone_click", {
+  const marketingTracked = trackMarketingEvent("phone_click", {
     targetType: "phone",
     ...options
   });
+
+  const googleAdsTracked = trackGoogleAdsConversion("phone_click");
+  return marketingTracked || googleAdsTracked;
 }
 
 function trackEmailClick(options = {}) {
@@ -185,10 +340,13 @@ function trackEmailClick(options = {}) {
 }
 
 function trackGoogleFormClick(options = {}) {
-  return trackMarketingEvent("google_form_click", {
+  const marketingTracked = trackMarketingEvent("google_form_click", {
     targetType: "google_form",
     ...options
   });
+
+  const googleAdsTracked = trackGoogleAdsConversion("google_form_click");
+  return marketingTracked || googleAdsTracked;
 }
 
 function trackLeadStart(options = {}) {
@@ -247,6 +405,12 @@ function bindTrackedCtas() {
     });
   });
 }
+
+// Google tag bootstrap
+// A Google Ads a sima oldalbetöltésnél is keresi a taget, ezért nem elég csak
+// CTA-kattintáskor inicializálni. Ha van megadott tagId, már page load során
+// betöltjük a gtag.js SDK-t és sorba állítjuk a config hívást.
+ensureGoogleTag();
 
 bindTrackedCtas();
 
