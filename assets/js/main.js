@@ -292,6 +292,35 @@ function trackBrevoEvent(eventName, options = {}) {
   return true;
 }
 
+// Brevo identify helper
+// Későbbi bővítéshez előkészített pont: csak valódi, felhasználó által megadott
+// elérhetőséggel hívd meg. Ha nincs valódi kontaktadat, maradjon inaktív.
+function identifyBrevoVisitor(identifiers = {}, attributes = {}) {
+  const normalizedIdentifiers = compactObject({
+    email_id: identifiers.email_id || identifiers.email,
+    phone_id: identifiers.phone_id || identifiers.phone,
+    whatsapp_id: identifiers.whatsapp_id || identifiers.whatsapp
+  });
+
+  if (Object.keys(normalizedIdentifiers).length === 0 || !ensureBrevoTracker()) {
+    return false;
+  }
+
+  const payload = {
+    identifiers: normalizedIdentifiers
+  };
+
+  const normalizedAttributes = compactObject(attributes);
+  if (Object.keys(normalizedAttributes).length > 0) {
+    payload.attributes = normalizedAttributes;
+  }
+
+  window.Brevo.push(["identify", payload]);
+  return true;
+}
+
+window.identifyBrevoVisitor = identifyBrevoVisitor;
+
 // GA4 tracking helper
 // A gtag snippet külön kerülhet az oldalba, ha később GA4 mérés is kell.
 function isGa4TrackerAvailable() {

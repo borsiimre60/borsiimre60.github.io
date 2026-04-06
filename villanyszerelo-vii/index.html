@@ -33,6 +33,17 @@
       window.__GOOGLE_TAG_CONFIG__.adsConversions || {}
     );
   </script>
+  <script>
+    // Brevo web tracker publikus client key ehhez a landing oldalhoz.
+    // Fontos: ide csak a trackerhez tartozó nyilvános client key kerülhet.
+    // API kulcsot vagy xkeysib-... kulcsot frontendbe nem teszünk.
+    window.__BREVO_TRACKER_CONFIG__ = Object.assign(
+      {
+        clientKey: "4rorzc50q5138q3n0wj8igxd"
+      },
+      window.__BREVO_TRACKER_CONFIG__ || {}
+    );
+  </script>
   <script defer src="/assets/js/main.js"></script>
 </head>
 <body class="theme-villany" data-page="villanyszerelo-vii" data-source-label="villanyszerelo_vii_landing">
