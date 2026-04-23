@@ -770,6 +770,26 @@ img {
   margin-top: 12px;
 }
 
+.supplemental-services-grid {
+  align-items: stretch;
+}
+
+.supplemental-service-card {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  box-shadow: var(--shadow-soft);
+}
+
+.supplemental-service-card p {
+  margin: 0;
+}
+
+.supplemental-service-card .button {
+  margin-top: auto;
+  align-self: flex-start;
+}
+
 .service-item {
   position: relative;
   min-height: 100%;
