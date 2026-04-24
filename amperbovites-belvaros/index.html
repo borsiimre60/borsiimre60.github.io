@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Amperbővítés és mérőhely kialakítás a belvárosban | E-mailes egyeztetés</title>
+  <meta name="description" content="Belvárosi amperbővítés, mérőhely kialakítás, szabványosítás, teljesítménybővítés és új bekapcsolás. E-mailes egyeztetés, előszűrő űrlap, tervezett villanyszerelési munkákhoz.">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="hu_HU">
+  <meta property="og:title" content="Amperbővítés és mérőhely kialakítás a belvárosban | E-mailes egyeztetés">
+  <meta property="og:description" content="Belvárosi amperbővítés, mérőhely kialakítás, szabványosítás, teljesítménybővítés és új bekapcsolás. E-mailes egyeztetés, előszűrő űrlap, tervezett villanyszerelési munkákhoz.">
+  <meta property="og:url" content="https://borsiimre60.github.io/amperbovites-belvaros/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <style>
+    body[data-page="amperbovites-belvaros"] {
+      color: #28303d;
+      background:
+        radial-gradient(circle at top right, rgba(227, 28, 37, 0.12), transparent 28%),
+        linear-gradient(180deg, #f8f9fb 0%, #eef1f5 100%);
+    }
+
+    body[data-page="amperbovites-belvaros"] .page-shell {
+      background: transparent;
+    }
+
+    body[data-page="amperbovites-belvaros"] .site-header,
+    body[data-page="amperbovites-belvaros"] .site-footer {
+      background: rgba(255, 255, 255, 0.92);
+      border-color: rgba(28, 35, 48, 0.08);
+      backdrop-filter: blur(16px);
+    }
+
+    body[data-page="amperbovites-belvaros"] .landing-hero {
+      background:
+        radial-gradient(circle at 78% 18%, rgba(227, 28, 37, 0.12), transparent 22%),
+        linear-gradient(135deg, #ffffff 0%, #f5f7fa 44%, #edf2f7 100%);
+      color: #28303d;
+    }
+
+    body[data-page="amperbovites-belvaros"] .landing-hero .landing-copy {
+      position: relative;
+      z-index: 1;
+    }
+
+    body[data-page="amperbovites-belvaros"] .landing-hero .page-copy {
+      color: #dfe5ee;
+      text-shadow: 0 1px 1px rgba(15, 23, 42, 0.18);
+      max-width: 42rem;
+    }
+
+    body[data-page="amperbovites-belvaros"] .landing-hero .back-link,
+    body[data-page="amperbovites-belvaros"] .landing-hero .page-kicker {
+      color: #f3f6fb;
+      text-shadow: 0 1px 1px rgba(15, 23, 42, 0.22);
+    }
+
+    body[data-page="amperbovites-belvaros"] .page-kicker,
+    body[data-page="amperbovites-belvaros"] .section-label,
+    body[data-page="amperbovites-belvaros"] .panel-tag,
+    body[data-page="amperbovites-belvaros"] .route-tag,
+    body[data-page="amperbovites-belvaros"] .inline-tag,
+    body[data-page="amperbovites-belvaros"] .response-label {
+      color: #c62828;
+    }
+
+    body[data-page="amperbovites-belvaros"] .back-link,
+    body[data-page="amperbovites-belvaros"] .site-header a,
+    body[data-page="amperbovites-belvaros"] .site-footer a,
+    body[data-page="amperbovites-belvaros"] .quick-action a,
+    body[data-page="amperbovites-belvaros"] .highlight-band a {
+      color: #b71c1c;
+    }
+
+    body[data-page="amperbovites-belvaros"] .site-header a {
+      color: #a61b1b;
+      font-weight: 600;
+    }
+
+    body[data-page="amperbovites-belvaros"] .page-copy,
+    body[data-page="amperbovites-belvaros"] .section-intro p,
+    body[data-page="amperbovites-belvaros"] .route-card p,
+    body[data-page="amperbovites-belvaros"] .audience-card p,
+    body[data-page="amperbovites-belvaros"] .contact-panel p,
+    body[data-page="amperbovites-belvaros"] .form-card p,
+    body[data-page="amperbovites-belvaros"] .response-card p,
+    body[data-page="amperbovites-belvaros"] .highlight-band p,
+    body[data-page="amperbovites-belvaros"] .cta-panel p {
+      color: #505a68;
+    }
+
+    body[data-page="amperbovites-belvaros"] .response-card,
+    body[data-page="amperbovites-belvaros"] .highlight-band,
+    body[data-page="amperbovites-belvaros"] .contact-panel,
+    body[data-page="amperbovites-belvaros"] .form-card,
+    body[data-page="amperbovites-belvaros"] .cta-panel,
+    body[data-page="amperbovites-belvaros"] .route-card,
+    body[data-page="amperbovites-belvaros"] .audience-card {
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid rgba(28, 35, 48, 0.08);
+      box-shadow: 0 20px 50px rgba(28, 35, 48, 0.08);
+    }
+
+    body[data-page="amperbovites-belvaros"] .highlight-band {
+      background:
+        linear-gradient(135deg, #fff3f3 0%, #f8dddd 100%);
+      border-color: rgba(198, 40, 40, 0.22);
+      box-shadow: 0 24px 54px rgba(145, 26, 31, 0.12);
+    }
+
+    body[data-page="amperbovites-belvaros"] .response-card {
+      background:
+        linear-gradient(180deg, #ffffff 0%, #fff5f5 100%);
+      border-color: rgba(198, 40, 40, 0.14);
+    }
+
+    body[data-page="amperbovites-belvaros"] .trust-inline li {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.18);
+      color: #edf2f8;
+    }
+
+    body[data-page="amperbovites-belvaros"] .button-accent {
+      background: linear-gradient(135deg, #d7262d 0%, #b8151b 100%);
+      border-color: #b8151b;
+      color: #ffffff;
+      box-shadow: 0 14px 28px rgba(215, 38, 45, 0.24);
+    }
+
+    body[data-page="amperbovites-belvaros"] .button-secondary {
+      background: #ffffff;
+      border-color: rgba(198, 40, 40, 0.28);
+      color: #a11818;
+    }
+
+    body[data-page="amperbovites-belvaros"] .button-ghost {
+      background: rgba(255, 255, 255, 0.92);
+      border-color: rgba(28, 35, 48, 0.14);
+      color: #243041;
+      box-shadow: 0 12px 24px rgba(28, 35, 48, 0.12);
+    }
+
+    body[data-page="amperbovites-belvaros"] .button:hover,
+    body[data-page="amperbovites-belvaros"] .button:focus-visible {
+      transform: translateY(-1px);
+    }
+
+    body[data-page="amperbovites-belvaros"] .field input,
+    body[data-page="amperbovites-belvaros"] .field select,
+    body[data-page="amperbovites-belvaros"] .field textarea {
+      border-color: rgba(28, 35, 48, 0.14);
+      background: #ffffff;
+    }
+
+    body[data-page="amperbovites-belvaros"] .field input:focus,
+    body[data-page="amperbovites-belvaros"] .field select:focus,
+    body[data-page="amperbovites-belvaros"] .field textarea:focus,
+    body[data-page="amperbovites-belvaros"] .checkbox-option:has(input:focus-visible),
+    body[data-page="amperbovites-belvaros"] .radio-option:has(input:focus-visible) {
+      border-color: #c62828;
+      box-shadow: 0 0 0 4px rgba(198, 40, 40, 0.12);
+      outline: none;
+    }
+
+    body[data-page="amperbovites-belvaros"] .radio-option,
+    body[data-page="amperbovites-belvaros"] .checkbox-option {
+      border-color: rgba(28, 35, 48, 0.1);
+      background: rgba(255, 255, 255, 0.96);
+    }
+
+    body[data-page="amperbovites-belvaros"] .landing-hero .button-secondary {
+      background: rgba(255, 255, 255, 0.98);
+      border-color: rgba(198, 40, 40, 0.3);
+      color: #991b1b;
+      box-shadow: 0 12px 24px rgba(28, 35, 48, 0.1);
+    }
+
+    body[data-page="amperbovites-belvaros"] .landing-hero .button-ghost {
+      background: #ffffff;
+      border-color: rgba(31, 42, 55, 0.24);
+      color: #1f2a37;
+      box-shadow: 0 12px 24px rgba(28, 35, 48, 0.14);
+    }
+
+    body[data-page="amperbovites-belvaros"] .landing-hero .button-ghost:hover,
+    body[data-page="amperbovites-belvaros"] .landing-hero .button-ghost:focus-visible {
+      background: #ffffff;
+      border-color: rgba(31, 42, 55, 0.32);
+    }
+
+    body[data-page="amperbovites-belvaros"] .landing-hero .response-card p,
+    body[data-page="amperbovites-belvaros"] .landing-hero .response-card li {
+      color: #4f5968;
+    }
+
+    body[data-page="amperbovites-belvaros"] .highlight-band h2,
+    body[data-page="amperbovites-belvaros"] .highlight-band p,
+    body[data-page="amperbovites-belvaros"] .highlight-band li {
+      color: #2f3845;
+    }
+
+    body[data-page="amperbovites-belvaros"] .highlight-band .panel-tag {
+      color: #a61b1b;
+      font-weight: 700;
+    }
+
+    body[data-page="amperbovites-belvaros"] .highlight-band a {
+      color: #8f1116;
+      font-weight: 700;
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 0.18em;
+    }
+
+    @media (max-width: 720px) {
+      body[data-page="amperbovites-belvaros"] .landing-hero {
+        background:
+          linear-gradient(180deg, #ffffff 0%, #f5f7fa 100%);
+      }
+    }
+  </style>
+  <script>
+    window.__GOOGLE_TAG_CONFIG__ = window.__GOOGLE_TAG_CONFIG__ || {};
+    window.__GOOGLE_TAG_CONFIG__.tagId =
+      window.__GOOGLE_TAG_CONFIG__.tagId || "AW-947361799";
+    window.__GOOGLE_TAG_CONFIG__.adsConversions = Object.assign(
+      {
+        phone_click: "obigCPuLnpQcEIew3sMD",
+        google_form_click: "-d5GCPiLnpQcEIew3sMD"
+      },
+      window.__GOOGLE_TAG_CONFIG__.adsConversions || {}
+    );
+  </script>
+  <script>
+    window.__BREVO_TRACKER_CONFIG__ = Object.assign(
+      {
+        clientKey: "4rorzc50q5138q3n0wj8igxd"
+      },
+      window.__BREVO_TRACKER_CONFIG__ || {}
+    );
+  </script>
+  <script defer src="/assets/js/main.js"></script>
+</head>
+<body class="theme-villany" data-page="amperbovites-belvaros" data-source-label="amperbovites_belvaros_landing">
+  <div class="page-shell">
+    <header class="site-header">
+      <div class="container header-row">
+        <a class="brand" href="/">
+          <span class="brand-copy">
+            <span class="brand-name">Szakiszerviz Budapest</span>
+            <span class="brand-subtitle">Belvárosi amperbővítés és mérőhely kialakítás</span>
+          </span>
+        </a>
+        <nav class="header-nav" aria-label="Fő navigáció">
+          <a href="#szolgaltatasok">Szolgáltatások</a>
+          <a href="#egyeztetes">E-mailes egyeztetés</a>
+          <a href="#munka-leadas">Űrlap</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="landing-hero" id="hero">
+        <div class="container landing-hero-grid">
+          <div class="landing-copy">
+            <a class="back-link" href="/">&larr; Vissza a központi oldalra</a>
+            <p class="page-kicker">Belvárosi, tervezett villanyszerelési munkák</p>
+            <h1>Amperbővítés, mérőhely kialakítás és szabványosítás a belvárosban</h1>
+            <p class="page-copy">
+              Ez az oldal nem SOS hibákra szól, hanem tervezettebb munkákra: amperbővítésre,
+              mérőhely kialakításra, szabványosításra, teljesítménybővítésre és új bekapcsolásra.
+              Az e-mailes egyeztetés itt kiemelten hasznos, mert képet, leírást vagy kapcsolódó adatot is lehet küldeni.
+            </p>
+
+            <div class="hero-actions">
+              <a class="button button-accent" href="mailto:elektromosugyintezes@gmail.com" data-track-event="email_click" data-track-section="hero" data-track-target-type="email">E-mail küldése</a>
+              <a class="button button-secondary" href="#egyeztetes" data-track-event="lead_form_start" data-track-section="hero" data-track-target-type="form">Egyeztetést kérek</a>
+              <a class="button button-ghost" href="#munka-leadas" data-track-event="lead_form_start" data-track-section="hero" data-track-target-type="form">Munka leadása</a>
+              <a class="button button-secondary" href="tel:+36702477356" data-track-event="phone_click" data-track-section="hero" data-track-target-type="phone">Telefonos kapcsolat</a>
+            </div>
+
+            <ul class="trust-inline" aria-label="Rövid bizalmi pontok">
+              <li>e-mailes egyeztetés képekkel és leírással</li>
+              <li>amperbővítés / mérőhely / szabványosítás</li>
+              <li>belvárosi, tervezett villanyszerelési munkák</li>
+            </ul>
+          </div>
+
+          <aside class="response-card" aria-label="E-mailes egyeztetés előnye">
+            <span class="response-label">E-mail előnyben</span>
+            <h3>Tervezettebb munkáknál az e-mail sokszor a legjobb első lépés</h3>
+            <p>
+              Amperbővítésnél, mérőhely átalakításnál vagy új bekapcsolásnál gyakran segít,
+              ha rögtön el tudja küldeni a helyszínről készült képeket, a meglévő állapotot
+              vagy azt, milyen új fogyasztó kerülne be.
+            </p>
+            <ul class="response-list">
+              <li>képek és leírás e-mailben egyszerűen elküldhető</li>
+              <li>klíma, tűzhely vagy új nagyfogyasztó esetén is hasznos</li>
+              <li>az előszűrés után könnyebb pontosabban egyeztetni a következő lépést</li>
+            </ul>
+          </aside>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="audience-grid">
+            <article class="audience-card">
+              <span class="inline-tag">Mit érdemes megírni</span>
+              <h3>Jelenlegi állapot</h3>
+              <p>
+                Ha tudja, írja meg, hogy 1 fázis vagy 3 fázis van-e jelenleg, és van-e már valamilyen elképzelése a bővítés irányáról.
+              </p>
+            </article>
+
+            <article class="audience-card">
+              <span class="inline-tag">Tipikus igény</span>
+              <h3>Miért kell a bővítés</h3>
+              <p>
+                Klíma, elektromos tűzhely, új sütő, hőszivattyú vagy más nagyobb fogyasztó esetén is érdemes röviden leírni az okot.
+              </p>
+            </article>
+
+            <article class="audience-card">
+              <span class="inline-tag">Hasznos kiegészítés</span>
+              <h3>Képek és dokumentumok</h3>
+              <p>
+                Ha van fotó, terv vagy korábbi információ, azt e-mailben külön is el lehet küldeni, így gyorsabb az első előszűrés.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="bemutatkozas">
+        <div class="container">
+          <div class="section-intro">
+            <p class="section-label">Bemutatkozás</p>
+            <h2>Belvárosi munkákhoz átlátható egyeztetés</h2>
+            <p>
+              Borsi Imre vagyok, elektromos műszaki ügyintéző. A belvárosban tervezettebb villanyszerelési munkákban is segítek,
+              ha amperbővítésre, mérőhely kialakításra, szabványosításra, teljesítménybővítésre vagy új bekapcsolásra
+              van szükség. Ezeknél a munkáknál sokszor az a legjobb kiindulás, ha rövid leírással és e-mailben küldött
+              képekkel indul az egyeztetés.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="szolgaltatasok">
+        <div class="container">
+          <div class="section-intro">
+            <p class="section-label">Milyen ügyekben segítek</p>
+            <h2>Nem gyors hibára, hanem előre tervezhető villanyszerelési munkákra</h2>
+          </div>
+
+          <div class="route-grid">
+            <article class="route-card">
+              <span class="route-tag">1. szolgáltatás</span>
+              <h3>Amperbővítés</h3>
+              <p>
+                Ha klíma, elektromos tűzhely, új nagyfogyasztó vagy bővülő terhelés miatt több teljesítményre van szükség.
+              </p>
+            </article>
+
+            <article class="route-card">
+              <span class="route-tag">2. szolgáltatás</span>
+              <h3>Mérőhely kialakítás</h3>
+              <p>
+                Új mérőhely előkészítése vagy meglévő mérőhely olyan átalakítása, amely rendezett továbbhaladást tesz lehetővé.
+              </p>
+            </article>
+
+            <article class="route-card">
+              <span class="route-tag">3. szolgáltatás</span>
+              <h3>Szabványosítás</h3>
+              <p>
+                Ha a jelenlegi kialakítás már nem megfelelő, és rendezni kell a mérőhely vagy kapcsolódó elektromos kialakítás állapotát.
+              </p>
+            </article>
+
+            <article class="route-card">
+              <span class="route-tag">4. szolgáltatás</span>
+              <h3>Teljesítménybővítés</h3>
+              <p>
+                Ha nagyobb igény jelent meg az ingatlanban, és ehhez át kell gondolni a jelenlegi kapacitást vagy a csatlakozási oldalt.
+              </p>
+            </article>
+
+            <article class="route-card">
+              <span class="route-tag">5. szolgáltatás</span>
+              <h3>Új bekapcsolás</h3>
+              <p>
+                Ha új ingatlan, új kialakítás vagy új műszaki helyzet miatt teljesen új egyeztetésre és előkészítésre van szükség.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="egyeztetes">
+        <div class="container">
+          <div class="highlight-band">
+            <div>
+              <span class="panel-tag">E-mailes kapcsolatfelvétel</span>
+              <h2>Ha szeretné, az adatokat és a képeket e-mailben is elküldheti</h2>
+            </div>
+            <div>
+              <p>
+                Ez különösen hasznos lehet klíma, tűzhely, új nagyfogyasztó, amperbővítés vagy új bekapcsolás esetén.
+                Minél rövidebben és érthetőbben leírja az igényt, annál könnyebb gyorsan eldönteni, mi lehet a következő lépés.
+              </p>
+              <ul>
+                <li><a href="mailto:elektromosugyintezes@gmail.com" data-track-event="email_click" data-track-section="contact" data-track-target-type="email">elektromosugyintezes@gmail.com</a></li>
+                <li>írja meg, hogy jelenleg mi van kiépítve, és mire szeretne váltani</li>
+                <li>küldhet képet a mérőhelyről, a környezetről vagy a tervezett fogyasztóról is</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="munka-leadas">
+        <div class="container contact-layout">
+          <aside class="contact-panel">
+            <p class="section-label">Kapcsolatfelvétel</p>
+            <h3>E-mailben a legkönnyebb elindulni</h3>
+            <p>
+              Ennél a landingnél az e-mail nem mellékes csatorna, hanem az egyik fő kapcsolatfelvételi út.
+              Ha szeretné, előbb kitöltheti az űrlapot, utána pedig ugyanarra az e-mail címre képet vagy dokumentumot is küldhet.
+            </p>
+
+            <div class="quick-actions">
+              <div class="quick-action">
+                <p>E-mail</p>
+                <a href="mailto:elektromosugyintezes@gmail.com" data-track-event="email_click" data-track-section="contact" data-track-target-type="email">elektromosugyintezes@gmail.com</a>
+              </div>
+              <div class="quick-action">
+                <p>Egyeztetés</p>
+                <a href="#lead-form" data-track-event="lead_form_start" data-track-section="contact" data-track-target-type="form">Egyeztetést kérek</a>
+              </div>
+              <div class="quick-action">
+                <p>Telefon</p>
+                <a href="tel:+36702477356" data-track-event="phone_click" data-track-section="contact" data-track-target-type="phone">+36 70 247 7356</a>
+              </div>
+            </div>
+
+            <p class="panel-note">
+              Klíma, tűzhely, új nagyfogyasztó vagy 1 fázisról 3 fázisra váltás esetén is érdemes röviden leírni az igényt.
+            </p>
+          </aside>
+
+          <div class="form-card">
+            <p class="section-label">Űrlap</p>
+            <h3>Egyeztetés amperbővítéshez vagy mérőhely kialakításhoz</h3>
+            <p>
+              Ha szeretné, röviden leírhatja az igényt, és e-mailben is elküldheti a képeket vagy a kapcsolódó adatokat.
+            </p>
+
+            <form
+              class="lead-form"
+              id="lead-form"
+              data-mailto-recipient="elektromosugyintezes@gmail.com"
+              data-mail-subject-prefix="Amperbővítés / mérőhely egyeztetés"
+              data-mailto-feedback="Megnyílt az e-mail kliens az előkészített adatokkal. Ha van kép vagy dokumentum, ugyanarra az e-mail címre külön is elküldheti."
+            >
+              <div class="form-grid">
+                <div class="field">
+                  <label for="name">Név</label>
+                  <input id="name" name="name" type="text" autocomplete="name" required>
+                </div>
+
+                <div class="field">
+                  <label for="phone">Telefonszám</label>
+                  <input id="phone" name="phone" type="tel" autocomplete="tel" required>
+                </div>
+
+                <div class="field">
+                  <label for="email">E-mail cím</label>
+                  <input id="email" name="email" type="email" autocomplete="email" required>
+                </div>
+
+                <div class="field">
+                  <label for="district">Cím / kerület</label>
+                  <input id="district" name="district" type="text" autocomplete="street-address" required>
+                </div>
+
+                <div class="field field-full">
+                  <label for="inquiryType">Milyen ügyben keres?</label>
+                  <select id="inquiryType" name="inquiryType" required>
+                    <option value="">Válasszon</option>
+                    <option value="Amperbővítés">Amperbővítés</option>
+                    <option value="Mérőhely kialakítás">Mérőhely kialakítás</option>
+                    <option value="Szabványosítás">Szabványosítás</option>
+                    <option value="Teljesítménybővítés">Teljesítménybővítés</option>
+                    <option value="Új bekapcsolás">Új bekapcsolás</option>
+                    <option value="Egyéb">Egyéb</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="currentPhase">Jelenlegi állapot</label>
+                  <select id="currentPhase" name="currentPhase" required>
+                    <option value="">Válasszon</option>
+                    <option value="1 fázis">1 fázis</option>
+                    <option value="3 fázis">3 fázis</option>
+                    <option value="Nem tudom">Nem tudom</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="targetGoal">Mire szeretne váltani / mi a cél?</label>
+                  <select id="targetGoal" name="targetGoal" required>
+                    <option value="">Válasszon</option>
+                    <option value="1 fázisról 3 fázisra">1 fázisról 3 fázisra</option>
+                    <option value="Nagyobb amperre van szükség">Nagyobb amperre van szükség</option>
+                    <option value="Új bekapcsolás">Új bekapcsolás</option>
+                    <option value="Mérőhely átalakítás">Mérőhely átalakítás</option>
+                    <option value="Nem tudom pontosan">Nem tudom pontosan</option>
+                  </select>
+                </div>
+
+                <div class="field field-full">
+                  <label for="description">Rövid leírás</label>
+                  <textarea id="description" name="description" placeholder="Ide beírhatja, milyen készülékek kerülnek be, miért kell a bővítés, mi a probléma." required></textarea>
+                </div>
+
+                <fieldset class="field field-full">
+                  <legend class="legend">Tud képet vagy dokumentumot küldeni?</legend>
+                  <div class="radio-group">
+                    <label class="radio-option" for="attachments-now">
+                      <input id="attachments-now" name="attachmentStatus" type="radio" value="Igen, e-mailben elküldöm" required>
+                      <span>Igen, e-mailben elküldöm</span>
+                    </label>
+                    <label class="radio-option" for="attachments-later">
+                      <input id="attachments-later" name="attachmentStatus" type="radio" value="Igen, később küldöm">
+                      <span>Igen, később küldöm</span>
+                    </label>
+                    <label class="radio-option" for="attachments-no">
+                      <input id="attachments-no" name="attachmentStatus" type="radio" value="Nem">
+                      <span>Nem</span>
+                    </label>
+                  </div>
+                </fieldset>
+
+                <label class="checkbox-option field-full" for="consent">
+                  <input id="consent" name="consent" type="checkbox" value="Elfogadva" required>
+                  <span>Hozzájárulok ahhoz, hogy a megadott adataim alapján kapcsolatfelvétel történjen.</span>
+                </label>
+              </div>
+
+              <div class="form-actions">
+                <button class="button button-accent" type="submit">Adatok elküldése</button>
+                <a class="button button-secondary" href="mailto:elektromosugyintezes@gmail.com" data-track-event="email_click" data-track-section="contact" data-track-target-type="email">E-mail küldése</a>
+                <a class="button button-ghost" href="#egyeztetes" data-track-event="lead_form_start" data-track-section="contact" data-track-target-type="form">Egyeztetést kérek</a>
+              </div>
+
+              <p class="form-feedback" id="form-feedback" aria-live="polite"></p>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="cta-panel closing-cta">
+            <p class="section-label">Záró CTA</p>
+            <h2>Ha szeretné, előbb e-mailben is elküldheti az adatokat és a képeket</h2>
+            <p>
+              Tervezettebb munkáknál ez sokszor gyorsabb és átláthatóbb első lépés. Ha kényelmesebb, az űrlapon is elküldheti az alapadatokat.
+            </p>
+            <div class="button-row">
+              <a class="button button-accent" href="mailto:elektromosugyintezes@gmail.com" data-track-event="email_click" data-track-section="footer" data-track-target-type="email">E-mail küldése</a>
+              <a class="button button-secondary" href="#egyeztetes" data-track-event="lead_form_start" data-track-section="footer" data-track-target-type="form">Egyeztetést kérek</a>
+              <a class="button button-ghost" href="#munka-leadas" data-track-event="lead_form_start" data-track-section="footer" data-track-target-type="form">Munka leadása</a>
+              <a class="button button-secondary" href="tel:+36702477356" data-track-event="phone_click" data-track-section="footer" data-track-target-type="phone">Telefonos kapcsolat</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-row">
+        <p>Szakiszerviz Budapest</p>
+        <p>&copy; <span id="current-year"></span> Minden jog fenntartva.</p>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

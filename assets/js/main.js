@@ -14,13 +14,90 @@ const links = {
   szakemberek: "/szakemberek/",
   szakipush: "/szakipush-web/",
   villanyszereloVii: "/villanyszerelo-vii/",
+  amperbovitesBelvaros: "/amperbovites-belvaros/",
   villanyszereloForm: ELECTRICIAN_VII_GOOGLE_FORM_URL
 };
+
+const TRACKING_PARAM_NAMES = new Set([
+  "utm_id",
+  "gclid",
+  "fbclid",
+  "wbraid",
+  "gbraid",
+  "msclkid",
+  "ext_id",
+  "szaki_id",
+  "source"
+]);
+
+function shouldPreserveTrackingParam(name) {
+  if (!name) {
+    return false;
+  }
+
+  return name.startsWith("utm_") || TRACKING_PARAM_NAMES.has(name);
+}
+
+function getPreservedTrackingParams(sourceParams) {
+  const params =
+    sourceParams instanceof URLSearchParams
+      ? sourceParams
+      : new URLSearchParams(window.location.search);
+  const preserved = new URLSearchParams();
+
+  params.forEach((value, key) => {
+    if (shouldPreserveTrackingParam(key) && hasTrackingValue(value)) {
+      preserved.set(key, value);
+    }
+  });
+
+  return preserved;
+}
+
+function appendTrackingParamsToHref(href, sourceParams) {
+  if (
+    !hasTrackingValue(href) ||
+    href.startsWith("mailto:") ||
+    href.startsWith("tel:") ||
+    href.startsWith("#")
+  ) {
+    return href;
+  }
+
+  let url;
+
+  try {
+    url = new URL(href, window.location.origin);
+  } catch (error) {
+    return href;
+  }
+
+  const preserved = getPreservedTrackingParams(sourceParams);
+  preserved.forEach((value, key) => {
+    if (!url.searchParams.has(key)) {
+      url.searchParams.set(key, value);
+    }
+  });
+
+  if (url.origin === window.location.origin) {
+    return `${url.pathname}${url.search}${url.hash}`;
+  }
+
+  return url.toString();
+}
+
+window.SzakiSiteUtils = Object.assign(window.SzakiSiteUtils || {}, {
+  getPreservedTrackingParams,
+  appendTrackingParamsToHref
+});
 
 document.querySelectorAll("[data-link]").forEach((element) => {
   const key = element.getAttribute("data-link");
   if (key && links[key]) {
-    element.setAttribute("href", links[key]);
+    element.setAttribute(
+      "href",
+      appendTrackingParamsToHref(links[key], window.location.search)
+    );
   }
 });
 
@@ -292,35 +369,6 @@ function trackBrevoEvent(eventName, options = {}) {
   return true;
 }
 
-// Brevo identify helper
-// Későbbi bővítéshez előkészített pont: csak valódi, felhasználó által megadott
-// elérhetőséggel hívd meg. Ha nincs valódi kontaktadat, maradjon inaktív.
-function identifyBrevoVisitor(identifiers = {}, attributes = {}) {
-  const normalizedIdentifiers = compactObject({
-    email_id: identifiers.email_id || identifiers.email,
-    phone_id: identifiers.phone_id || identifiers.phone,
-    whatsapp_id: identifiers.whatsapp_id || identifiers.whatsapp
-  });
-
-  if (Object.keys(normalizedIdentifiers).length === 0 || !ensureBrevoTracker()) {
-    return false;
-  }
-
-  const payload = {
-    identifiers: normalizedIdentifiers
-  };
-
-  const normalizedAttributes = compactObject(attributes);
-  if (Object.keys(normalizedAttributes).length > 0) {
-    payload.attributes = normalizedAttributes;
-  }
-
-  window.Brevo.push(["identify", payload]);
-  return true;
-}
-
-window.identifyBrevoVisitor = identifyBrevoVisitor;
-
 // GA4 tracking helper
 // A gtag snippet külön kerülhet az oldalba, ha később GA4 mérés is kell.
 function isGa4TrackerAvailable() {
@@ -398,7 +446,10 @@ function trackLeadSubmitAttempt(formData, options = {}) {
       has_email: hasTrackingValue(formData?.get("email")) ? "yes" : "no"
     }),
     eventData: compactObject({
-      property_type: formData?.get("propertyType"),
+      property_type:
+        formData?.get("propertyType") || formData?.get("inquiryType"),
+      inquiry_type: formData?.get("inquiryType"),
+      target_goal: formData?.get("targetGoal"),
       urgency: formData?.get("urgency"),
       ...options.eventData
     })
@@ -417,6 +468,120 @@ function buildTrackingOptions(element) {
     section: element.dataset.trackSection,
     targetType: element.dataset.trackTargetType,
     sourceLabel: element.dataset.trackSourceLabel
+  };
+}
+
+function getFirstNonEmptyValue(values) {
+  return values.find((value) => hasTrackingValue(value)) || "";
+}
+
+function getLeadSubjectDetail(formData) {
+  return getFirstNonEmptyValue([
+    formData.get("propertyType"),
+    formData.get("inquiryType"),
+    formData.get("projectType"),
+    formData.get("serviceType"),
+    "villanyszerelési megkeresés"
+  ]);
+}
+
+function getFormFieldLabel(form, fieldName) {
+  const fields = Array.from(form.elements).filter(
+    (element) => element.name === fieldName
+  );
+  const primaryField = fields[0];
+
+  if (!primaryField) {
+    return fieldName;
+  }
+
+  if (hasTrackingValue(primaryField.dataset.mailLabel)) {
+    return primaryField.dataset.mailLabel.trim();
+  }
+
+  if (primaryField.labels && primaryField.labels.length > 0) {
+    return primaryField.labels[0].textContent.trim();
+  }
+
+  if (hasTrackingValue(primaryField.id)) {
+    const explicitLabel = form.querySelector(`label[for="${primaryField.id}"]`);
+    if (explicitLabel) {
+      return explicitLabel.textContent.trim();
+    }
+  }
+
+  const fieldset = primaryField.closest("fieldset");
+  if (fieldset) {
+    const legend = fieldset.querySelector("legend");
+    if (legend) {
+      return legend.textContent.trim();
+    }
+  }
+
+  return fieldName;
+}
+
+function getFormFieldDisplayValue(form, formData, fieldName) {
+  const fields = Array.from(form.elements).filter(
+    (element) => element.name === fieldName
+  );
+
+  if (fields.length === 0) {
+    return "";
+  }
+
+  const values = formData.getAll(fieldName).filter((value) =>
+    hasTrackingValue(value)
+  );
+
+  if (values.length === 0) {
+    return "";
+  }
+
+  const primaryField = fields[0];
+  if (primaryField.tagName === "SELECT") {
+    return values
+      .map((value) => {
+        const option = Array.from(primaryField.options).find(
+          (candidate) => candidate.value === value
+        );
+        return option ? option.textContent.trim() : String(value).trim();
+      })
+      .join(", ");
+  }
+
+  return values.map((value) => String(value).trim()).join(", ");
+}
+
+function collectLeadFormEntries(form, formData) {
+  const ignoredFields = new Set(["consent"]);
+  const fieldNames = Array.from(form.elements)
+    .map((element) => element.name)
+    .filter((name) => hasTrackingValue(name) && !ignoredFields.has(name));
+  const uniqueFieldNames = [...new Set(fieldNames)];
+
+  return uniqueFieldNames
+    .map((fieldName) => {
+      const label = getFormFieldLabel(form, fieldName);
+      const value = getFormFieldDisplayValue(form, formData, fieldName);
+      return [label, value];
+    })
+    .filter(([, value]) => hasTrackingValue(value));
+}
+
+function getLeadFormConfig(form, formData) {
+  const recipient =
+    form.dataset.mailtoRecipient?.trim() || "szakiszervizbp@gmail.com";
+  const subjectPrefix =
+    form.dataset.mailSubjectPrefix?.trim() || "Új megkeresés";
+  const feedbackMessage =
+    form.dataset.mailtoFeedback?.trim() ||
+    "Megnyílt az e-mail kliens az előkészített adatokkal. Ha gyorsabb, használja a telefonos vagy Google űrlapos gombokat.";
+
+  return {
+    recipient,
+    subject: `${subjectPrefix} - ${getLeadSubjectDetail(formData)}`,
+    feedbackMessage
   };
 }
 
@@ -490,28 +655,19 @@ if (leadForm) {
       return;
     }
 
-    const entries = [
-      ["Név", data.get("name")],
-      ["Telefonszám", data.get("phone")],
-      ["E-mail", data.get("email")],
-      ["Cím / kerület", data.get("district")],
-      ["Ingatlan típusa", data.get("propertyType")],
-      ["Sürgősség", data.get("urgency")],
-      ["Leírás", data.get("description")]
-    ].filter(([, value]) => value && String(value).trim().length > 0);
-
-    const subjectProperty = data.get("propertyType") || "villanyszerelési megkeresés";
-    const subject = `Új megkeresés - ${subjectProperty}`;
+    const entries = collectLeadFormEntries(leadForm, data);
+    const mailConfig = getLeadFormConfig(leadForm, data);
     const body = entries.map(([label, value]) => `${label}: ${value}`).join("\n");
-    const href = `mailto:szakiszervizbp@gmail.com?subject=${encodeURIComponent(
-      subject
+    const href = `mailto:${encodeURIComponent(
+      mailConfig.recipient
+    )}?subject=${encodeURIComponent(
+      mailConfig.subject
     )}&body=${encodeURIComponent(body)}`;
 
     window.location.href = href;
 
     if (formFeedback) {
-      formFeedback.textContent =
-        "Megnyílt az e-mail kliens az előkészített adatokkal. Ha gyorsabb, használja a telefonos vagy Google űrlapos gombokat.";
+      formFeedback.textContent = mailConfig.feedbackMessage;
     }
   });
 }
